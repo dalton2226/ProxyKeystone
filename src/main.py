@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QWidget, QHBoxLayout
+from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout
 from PySide6.QtCore import Qt 
 from PySide6.QtGui import QFont
 
@@ -20,19 +20,29 @@ font = QFont()
 font.setPointSize(20)
 welcome_label.setFont(font) # 
 
-window.show() # Makes window visible
-
 #Central Widget
 central_widget = QWidget() 
 window.setCentralWidget(central_widget)
-layout = QHBoxLayout()
-central_widget.setLayout(layout)             
+main_layout = QHBoxLayout()
+central_widget.setLayout(main_layout)     
 
 
-#Adding To Central Layout
-layout.addWidget(welcome_label)
+#Central Layout
+main_layout.addWidget(welcome_label)       
+
+#Main Area
+content_widget = QWidget()
+content_layout = QVBoxLayout()
+content_widget.setLayout(content_layout)
+#content_layout.addWidget(welcome_label)
+
+#Content Area Layout
+content_layout = QVBoxLayout()
+content_widget.setLayout(content_layout)
 
 
 
-#window.show() # Makes window visible
+
+#End
+window.show() # Makes window visible
 sys.exit(app.exec()) # Starts the application's event loop and exits the program when the window closes
