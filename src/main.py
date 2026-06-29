@@ -4,17 +4,22 @@ from PySide6.QtCore import Qt
 
 app = QApplication(sys.argv)
 
-
+#Windows
 window = QMainWindow() # Creates Main window
 window.setWindowTitle("Proxy Keystone") #sets the title of the GUI
 window.resize(900, 600) #sets window size
 
+#Main Title Label
 welcome_label = QLabel("Welcome to Proxy Keystone") # creates label
+welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Uses 1 argument which is a combination of allignment flags
+
+#Central Widget
 central_widget = QWidget() 
 window.setCentralWidget(central_widget)
 layout = QHBoxLayout()
 central_widget.setLayout(layout)             
-welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Uses 1 argument which is a combination of allignment flags
+
+#Adding To Central Layout
 layout.addWidget(welcome_label)
 
 window.show() # Makes window visible
