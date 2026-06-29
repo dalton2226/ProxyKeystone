@@ -5,58 +5,51 @@ from PySide6.QtGui import QFont
 
 app = QApplication(sys.argv)
 
-#Windows
+#Create Objects
+
 window = QMainWindow() # Creates Main window
+content_widget = QWidget()
+welcome_label = QLabel("Welcome to Proxy Keystone") # creates label
+central_widget = QWidget() 
+main_layout = QHBoxLayout()
+sidebar_widget = QWidget()
+sidebar_layout = QVBoxLayout()
+content_layout = QVBoxLayout()
+placeholder_label = QLabel("Main content area")
+league_label = QLabel("League of Legends")
+
+#Configure Objects ex (setAlignment setFont)
+    #Window
 window.setWindowTitle("Proxy Keystone") #sets the title of the GUI
 window.resize(900, 600) #sets window size
 
-#Main Label
-welcome_label = QLabel("Welcome to Proxy Keystone") # creates label
-welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Uses 1 argument which is a combination of allignment flags
-
-#Font
+     #Font
 font = QFont()
 font.setPointSize(20)
-welcome_label.setFont(font) # 
+welcome_label.setFont(font) 
+    #Content_Widget
+welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
+  
 
-#Central Widget
-central_widget = QWidget() 
+
+#Connect the Objects(building relationships EX(setLayout)
 window.setCentralWidget(central_widget)
-main_layout = QHBoxLayout()
-central_widget.setLayout(main_layout)     
-
-#Main Horizontal Layout
-content_widget = QWidget()
-content_layout = QVBoxLayout()
+#Layouts
 content_widget.setLayout(content_layout)
-
-#Main Horizontal Widgets
-main_layout.addWidget(content_widget)  
-content_layout.addWidget(welcome_label)  
-
-
-#Sidebar Layout
-sidebar_widget = QWidget()
-sidebar_layout = QVBoxLayout()
 sidebar_widget.setLayout(sidebar_layout)
+central_widget.setLayout(main_layout)   
 
-#Sidebar Widgets
-main_layout.addWidget(sidebar_widget)
-#sidebar_layout.addWidget(sidebar_widget)
-league_label = QLabel("League of Legends")
+#Build each section ex(sidebar_layout.addWidget)
 sidebar_layout.addWidget(league_label)
-main_layout.addWidget(sidebar_widget)
-
-
-
-
-#Placeholders
-placeholder_label = QLabel("Main content area")
+content_layout.addWidget(welcome_label)  
 content_layout.addWidget(placeholder_label)
 
 
+#Connect the major sections ex(Connect the major sections main_layout.addWidget(sidebar_widget))
+main_layout.addWidget(sidebar_widget)
+main_layout.addWidget(content_widget)  
 
 
-#End
+#END
 window.show() # Makes window visible
 sys.exit(app.exec()) # Starts the application's event loop and exits the program when the window closes
