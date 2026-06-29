@@ -10,7 +10,6 @@ window = QMainWindow() # Creates Main window
 window.setWindowTitle("Proxy Keystone") #sets the title of the GUI
 window.resize(900, 600) #sets window size
 
-
 #Main Label
 welcome_label = QLabel("Welcome to Proxy Keystone") # creates label
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Uses 1 argument which is a combination of allignment flags
@@ -26,19 +25,34 @@ window.setCentralWidget(central_widget)
 main_layout = QHBoxLayout()
 central_widget.setLayout(main_layout)     
 
-
-#Central Layout
-main_layout.addWidget(welcome_label)       
-
-#Main Area
+#Main Horizontal Layout
 content_widget = QWidget()
 content_layout = QVBoxLayout()
 content_widget.setLayout(content_layout)
-#content_layout.addWidget(welcome_label)
 
-#Content Area Layout
-content_layout = QVBoxLayout()
-content_widget.setLayout(content_layout)
+#Main Horizontal Widgets
+main_layout.addWidget(content_widget)  
+content_layout.addWidget(welcome_label)  
+
+
+#Sidebar Layout
+sidebar_widget = QWidget()
+sidebar_layout = QVBoxLayout()
+sidebar_widget.setLayout(sidebar_layout)
+
+#Sidebar Widgets
+main_layout.addWidget(sidebar_widget)
+#sidebar_layout.addWidget(sidebar_widget)
+league_label = QLabel("League of Legends")
+sidebar_layout.addWidget(league_label)
+main_layout.addWidget(sidebar_widget)
+
+
+
+
+#Placeholders
+placeholder_label = QLabel("Main content area")
+content_layout.addWidget(placeholder_label)
 
 
 
