@@ -12,6 +12,7 @@ content_widget = QWidget()
 central_widget = QWidget() 
 sidebar_widget = QWidget()
 sidebar_tree = QTreeWidget()
+league_rank_page = QWidget()
 
 #Sidebar Items
 finance_item = QTreeWidgetItem(["Finances"])
@@ -31,10 +32,16 @@ league_rank_item = QTreeWidgetItem(["League Rank"])
 welcome_label = QLabel("Proxy's Keystone") # creates label
 placeholder_label = QLabel("Main content area")
 
+league_rank_title_label = QLabel("League Rank Page")
+peak_rank_label = QLabel("Peak rank:")
+current_rank_label = QLabel("Current Rank:")
+win_rate_label = QLabel("Winrate")
+
     #Create Layouts
 main_layout = QHBoxLayout()
 content_layout = QVBoxLayout()
 sidebar_layout = QVBoxLayout()
+league_rank_layout = QVBoxLayout()
 
 #Configure Objects ex (setAlignment setFont)
 
@@ -55,14 +62,13 @@ def tree_clicked(item, column): #Prints whatever tree the user clicks
     updated_placeholder = (item.text(0))
     placeholder_label.setText(updated_placeholder)
 
-# placeholder_label = (item.text(0))
-# placeholder_label.setText(item.text(0))
 #Connect the Objects(building relationships EX(setLayout)
 window.setCentralWidget(central_widget)
 #Layouts
 content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)   
+league_rank_page.setLayout(league_rank_layout)
 sidebar_layout.addWidget(sidebar_tree)
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
 
@@ -72,9 +78,18 @@ sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function 
 content_layout.addWidget(welcome_label)   #Welcome Label added to 
 content_layout.addWidget(placeholder_label)
 
+content_layout.addWidget(league_rank_page) #Temporary Proof it works
+league_rank_layout.addWidget(league_rank_title_label)
+league_rank_layout.addWidget(league_rank_title_label)
+league_rank_layout.addWidget(current_rank_label) 
+league_rank_layout.addWidget(peak_rank_label)
+league_rank_layout.addWidget(win_rate_label)
+
+
 #Connect the major sections ex(Connect the major sections main_layout.addWidget(sidebar_widget))
 main_layout.addWidget(sidebar_widget) #Adds side bar to main layout
 main_layout.addWidget(content_widget)  #adds content widget to main layout
+
 #Top Level Items
 sidebar_tree.addTopLevelItem(games_item)
 sidebar_tree.addTopLevelItem(settings_item)
