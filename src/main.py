@@ -1,36 +1,50 @@
 import sys
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout
+from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem
 from PySide6.QtCore import Qt 
 from PySide6.QtGui import QFont
 
 app = QApplication(sys.argv)
 
 #Create Objects
-
 window = QMainWindow() # Creates Main window
+    #Widgets
 content_widget = QWidget()
-welcome_label = QLabel("Welcome to Proxy Keystone") # creates label
 central_widget = QWidget() 
-main_layout = QHBoxLayout()
 sidebar_widget = QWidget()
-sidebar_layout = QVBoxLayout()
-content_layout = QVBoxLayout()
+sidebar_tree = QTreeWidget()
+finance_item = QTreeWidgetItem(["Finances"])
+balance_item = QTreeWidgetItem(["Current Finances"])
+car_item = QTreeWidgetItem(["Car"])
+settings_item = QTreeWidgetItem(["Settings"])
+display_item = QTreeWidgetItem(["Display"])
+games_item = QTreeWidgetItem(["Games"])
+league_item = QTreeWidgetItem(["League of Legends"])
+deadlock_item = QTreeWidgetItem(["Deadlock"])
+league_rank = QTreeWidgetItem(["League Rank"])
+
+
+
+    #labels
+welcome_label = QLabel("Proxy's Keystone") # creates label
 placeholder_label = QLabel("Main content area")
-league_label = QLabel("League of Legends")
+
+    #Create Layouts
+main_layout = QHBoxLayout()
+content_layout = QVBoxLayout()
+sidebar_layout = QVBoxLayout()
 
 #Configure Objects ex (setAlignment setFont)
     #Window
-window.setWindowTitle("Proxy Keystone") #sets the title of the GUI
+window.setWindowTitle("Proxy's Keystone") #sets the title of the GUI
 window.resize(900, 600) #sets window size
 
      #Font
-font = QFont()
-font.setPointSize(20)
-welcome_label.setFont(font) 
-    #Content_Widget
+welcome_font = QFont()
+welcome_font.setPointSize(20)
+welcome_label.setFont(welcome_font) 
+    # Alignment
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
-  
-
+    # Stretch value
 
 #Connect the Objects(building relationships EX(setLayout)
 window.setCentralWidget(central_widget)
@@ -38,16 +52,38 @@ window.setCentralWidget(central_widget)
 content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)   
+sidebar_layout.addWidget(sidebar_tree)
+# sidebar_layout.addWidget(finance_tree)
+# sidebar_layout.addWidget(settings_tree)
 
 #Build each section ex(sidebar_layout.addWidget)
-sidebar_layout.addWidget(league_label)
-content_layout.addWidget(welcome_label)  
+
+content_layout.addWidget(welcome_label)   #Welcome Label added to 
 content_layout.addWidget(placeholder_label)
 
-
 #Connect the major sections ex(Connect the major sections main_layout.addWidget(sidebar_widget))
-main_layout.addWidget(sidebar_widget)
-main_layout.addWidget(content_widget)  
+main_layout.addWidget(sidebar_widget) #Adds side bar to main layout
+main_layout.addWidget(content_widget)  #adds content widget to main layout
+#Top Level Items
+sidebar_tree.addTopLevelItem(games_item)
+sidebar_tree.addTopLevelItem(settings_item)
+sidebar_tree.addTopLevelItem(car_item)
+sidebar_tree.addTopLevelItem(finance_item)
+
+# Sets the amount of space each layout gets 
+main_layout.setStretch(0, 1.5)  # sidebar
+main_layout.setStretch(1, 3)  # content area
+#Dropdown menus
+sidebar_tree.setHeaderLabel("Proxy") #using proxy as a place holder
+games_item.addChild(league_item)
+games_item.addChild(deadlock_item)
+settings_item.addChild(display_item)
+league_item.addChild(league_rank)
+
+
+
+
+
 
 
 #END
