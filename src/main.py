@@ -12,11 +12,12 @@ content_widget = QWidget()
 central_widget = QWidget() 
 sidebar_widget = QWidget()
 sidebar_tree = QTreeWidget()
+
 #Sidebar Items
 finance_item = QTreeWidgetItem(["Finances"])
-balance_item = QTreeWidgetItem(["Current Balance"]) #ADD
-bills_item = QTreeWidgetItem(["Recurring Expenses"]) #ADD
-purchased_item = QTreeWidgetItem(["Purchase History"]) #ADD
+balance_item = QTreeWidgetItem(["Current Balance"])
+bills_item = QTreeWidgetItem(["Recurring Expenses"]) 
+purchased_item = QTreeWidgetItem(["Purchase History"])
 car_item = QTreeWidgetItem(["Car Information"])
 garage_item = QTreeWidgetItem(["Current Cars"])
 settings_item = QTreeWidgetItem(["Settings"])
@@ -48,6 +49,14 @@ welcome_label.setFont(welcome_font)
 # Alignment
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
 
+#Fuctions
+
+def tree_clicked(item, column): #Prints whatever tree the user clicks
+    updated_placeholder = (item.text(0))
+    placeholder_label.setText(updated_placeholder)
+
+# placeholder_label = (item.text(0))
+# placeholder_label.setText(item.text(0))
 #Connect the Objects(building relationships EX(setLayout)
 window.setCentralWidget(central_widget)
 #Layouts
@@ -55,6 +64,8 @@ content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)   
 sidebar_layout.addWidget(sidebar_tree)
+sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
+
 
 #Build each section ex(sidebar_layout.addWidget)
 
@@ -83,6 +94,7 @@ car_item.addChild(garage_item)
 finance_item.addChild(bills_item)
 finance_item.addChild(balance_item)
 finance_item.addChild(purchased_item)
+
 
 
 
