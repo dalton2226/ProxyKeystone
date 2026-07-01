@@ -12,17 +12,19 @@ content_widget = QWidget()
 central_widget = QWidget() 
 sidebar_widget = QWidget()
 sidebar_tree = QTreeWidget()
+#Sidebar Items
 finance_item = QTreeWidgetItem(["Finances"])
-balance_item = QTreeWidgetItem(["Current Finances"])
-car_item = QTreeWidgetItem(["Car"])
+balance_item = QTreeWidgetItem(["Current Balance"]) #ADD
+bills_item = QTreeWidgetItem(["Recurring Expenses"]) #ADD
+purchased_item = QTreeWidgetItem(["Purchase History"]) #ADD
+car_item = QTreeWidgetItem(["Car Information"])
+garage_item = QTreeWidgetItem(["Current Cars"])
 settings_item = QTreeWidgetItem(["Settings"])
 display_item = QTreeWidgetItem(["Display"])
 games_item = QTreeWidgetItem(["Games"])
 league_item = QTreeWidgetItem(["League of Legends"])
 deadlock_item = QTreeWidgetItem(["Deadlock"])
-league_rank = QTreeWidgetItem(["League Rank"])
-
-
+league_rank_item = QTreeWidgetItem(["League Rank"])
 
     #labels
 welcome_label = QLabel("Proxy's Keystone") # creates label
@@ -34,17 +36,17 @@ content_layout = QVBoxLayout()
 sidebar_layout = QVBoxLayout()
 
 #Configure Objects ex (setAlignment setFont)
-    #Window
+
+#Window
 window.setWindowTitle("Proxy's Keystone") #sets the title of the GUI
 window.resize(900, 600) #sets window size
 
-     #Font
+#Font
 welcome_font = QFont()
 welcome_font.setPointSize(20)
 welcome_label.setFont(welcome_font) 
-    # Alignment
+# Alignment
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
-    # Stretch value
 
 #Connect the Objects(building relationships EX(setLayout)
 window.setCentralWidget(central_widget)
@@ -53,8 +55,6 @@ content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)   
 sidebar_layout.addWidget(sidebar_tree)
-# sidebar_layout.addWidget(finance_tree)
-# sidebar_layout.addWidget(settings_tree)
 
 #Build each section ex(sidebar_layout.addWidget)
 
@@ -78,7 +78,11 @@ sidebar_tree.setHeaderLabel("Proxy") #using proxy as a place holder
 games_item.addChild(league_item)
 games_item.addChild(deadlock_item)
 settings_item.addChild(display_item)
-league_item.addChild(league_rank)
+league_item.addChild(league_rank_item)
+car_item.addChild(garage_item)
+finance_item.addChild(bills_item)
+finance_item.addChild(balance_item)
+finance_item.addChild(purchased_item)
 
 
 
