@@ -41,3 +41,15 @@ Sidebar background color
 Bigger title
 Spacing/margins
 A border around the content area
+
+Objects I would need to make a game library
+games_page
+games_layout
+games_title_label
+
+Then your page map would connect:
+
+home_item     → home_page
+games_item    → games_page
+league_item   → league_page
+deadlock_item → deadlock_page
