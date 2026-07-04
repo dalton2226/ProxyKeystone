@@ -1,0 +1,43 @@
+Make a title (Done)
+Make a new central widget for containers Completed
+
+
+
+
+
+
+Much Later
+
+Make tabs for different games
+
+
+
+QStackedWidget for pages
+Adding user input to add information to JSON and have program read it to update info 
+
+Tree widget
+Click events
+QStackedWidget
+Build several pages
+QLineEdit (user input)
+QPushButton (Save)
+JSON (permanent storage)
+for loops (clean up repeated code)
+Dictionaries (replace long if/elif chains)
+
+
+Current
+
+QStackedWidget Finish the Framework
+
+Create A finished homepage
+
+Finish Sidebar pages
+
+Complete a full page (Probably Steam deals or deadlock buids) Steam deals would be easier
+
+Dark background
+Sidebar background color
+Bigger title
+Spacing/margins
+A border around the content area

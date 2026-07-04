@@ -1,0 +1,28 @@
+Part 1 Label
+
+app = The Manager of the application
+starts the program manages all the windows listens for mouse clicks listens for keyboard presses processes timers handles repainting the screen
+
+Window = holds all the widgets. 
+
+Widgets = The building blocks of the GUI
+
+welcome_label = the widget containing text 
+
+Git Use the following after each new feature
+git status
+git add .
+git commit -m "Short description"
+git push
+
+Class = the blueprint 
+
+Object.method is to change a method
+() with no paramter mean it likely returns a boolean
+
+
+font = QFont()
+font.setPointSize(20)
+font.setUnderline(True)
+welcome_label.setFont(font) # 
+-----------------------------------------------------------------------------

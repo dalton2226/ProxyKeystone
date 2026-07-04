@@ -1,10 +1,10 @@
-# def greet(name):
-#     print("Hello", name)
+def greet(name):
+    print("Hello", name)
 
 
-# greet("Dalton")
-# greet("Steam")
-# greet("League")
+ greet("Dalton")
+ greet("Steam")
+ greet("League")
 
 
 def favorite_game(game):
