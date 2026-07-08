@@ -22,13 +22,13 @@ central_widget = QWidget()
 sidebar_widget = QWidget()
 home_page = QWidget()
 #Games
-games_page = QWidget()
+games_page, games_layout = build_page("Game Library")
 league_page, league_layout = build_page("League Overview")
-league_matches_page = QWidget() 
-league_accounts_page = QWidget() 
+league_matches_page, league_matches_layout = build_page("Match History")
+league_accounts_page, league_accounts_layout = build_page("Accounts")
 deadlock_page, deadlock_layout = build_page("Deadlock Overview")
-deadlock_builds_page = QWidget() 
-deadlock_matches_page = QWidget() 
+deadlock_builds_page, deadlock_builds_layout = build_page("Builds")
+deadlock_matches_page, deadlock_matches_layout = build_page("Match History")
 #Finances
 finance_page = QWidget() 
 balance_page = QWidget() 
@@ -74,15 +74,6 @@ sound_item = QTreeWidgetItem(["Sound"])
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
 home_title_label = QLabel("Home")
-#Games
-games_title_label = QLabel("Game Library")
-
-league_matches_title_label = QLabel("Match History") 
-league_accounts_title_label = QLabel("Accounts") 
-#TODO deadlock_title_label = QLabel("Deadlock Overview")
-deadlock_builds_title_label = QLabel("Builds") 
-deadlock_matches_title_label = QLabel("Match History")
-
 
 #Finances
 finance_title_label = QLabel("Finances") 
@@ -98,19 +89,12 @@ settings_title_label = QLabel("Settings")
 display_title_label = QLabel("Display Settings") 
 sound_title_label = QLabel("Sound Settings") 
 #endregion
+
 #region Create Layouts
 main_layout = QHBoxLayout()
 content_layout = QVBoxLayout()
 sidebar_layout = QVBoxLayout()
 home_layout = QVBoxLayout() 
-#Games
-#league_layout = QVBoxLayout() 
-#TODO deadlock_layout = QVBoxLayout()
-league_matches_layout = QVBoxLayout()
-league_accounts_layout = QVBoxLayout()
-deadlock_builds_layout = QVBoxLayout()
-deadlock_matches_layout = QVBoxLayout()
-games_layout = QVBoxLayout()
 #Finances
 finance_layout = QVBoxLayout()
 balance_layout = QVBoxLayout()
@@ -175,15 +159,9 @@ window.setCentralWidget(central_widget)
 content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)  
-#Games 
-#TODO league_page.setLayout(league_layout)
+
 home_page.setLayout(home_layout)
-#TODO deadlock_page.setLayout(deadlock_layout)
-games_page.setLayout(games_layout)
-league_matches_page.setLayout(league_matches_layout) 
-league_accounts_page.setLayout(league_accounts_layout)
-deadlock_builds_page.setLayout(deadlock_builds_layout) 
-deadlock_matches_page.setLayout(deadlock_matches_layout) 
+
 #Finances
 finance_page.setLayout(finance_layout) 
 balance_page.setLayout(balance_layout) 
@@ -206,18 +184,8 @@ sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function 
 content_layout_items = [welcome_label, page_stack]
 for item in content_layout_items:
     content_layout.addWidget(item)
-
 home_layout.addWidget(home_title_label)
-#TODO Testing build_page function
 
-#Games
-#TODO league_layout.addWidget(league_title_label)
-#TODO deadlock_layout.addWidget(deadlock_title_label)
-league_matches_layout.addWidget(league_matches_title_label)
-league_accounts_layout.addWidget(league_accounts_title_label)
-deadlock_builds_layout.addWidget(deadlock_builds_title_label)
-deadlock_matches_layout.addWidget(deadlock_matches_title_label)
-games_layout.addWidget(games_title_label)
 #Finances
 finance_layout.addWidget(finance_title_label)
 balance_layout.addWidget(balance_title_label)
