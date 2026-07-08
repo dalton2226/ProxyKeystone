@@ -1,11 +1,12 @@
 #region Imports and Create window
 import sys
-from PySide6.QtWidgets import QApplication, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QStackedWidget
+from PySide6.QtWidgets import QApplication, QCompleter, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QStackedWidget, QLineEdit, QComboBox, QPushButton, QListWidget, QDialog
 from PySide6.QtCore import Qt 
 from PySide6.QtGui import QFont
 app = QApplication(sys.argv)
 window = QMainWindow() # Creates Main window
 #endregion
+
 #region Helper Functions
 def build_page(page_title): # Helper function the builds the page 
     page = QWidget()
@@ -15,16 +16,17 @@ def build_page(page_title): # Helper function the builds the page
     page.setLayout(layout)
     return (page, layout)
 #endregion
+
 #*Create Objects
-#region Create Widgets
+
+#region Create Pages
 content_widget = QWidget()
 central_widget = QWidget() 
 sidebar_widget = QWidget()
 sidebar_tree = QTreeWidget()
 page_stack = QStackedWidget()
-#keep above Widgets alone
-#Games
 home_page, home_layout = build_page("Home")
+#Games
 games_page, games_layout = build_page("Game Library")
 league_page, league_layout = build_page("League Overview")
 league_matches_page, league_matches_layout = build_page("Match History")
@@ -45,8 +47,11 @@ car_wishlist_page, car_wishlist_layout = build_page("Car Wishlist")
 settings_page, settings_layout = build_page("Settings")
 display_page, display_layout = build_page("Display Settings")
 sound_page, sound_layout = build_page("Sound Settings")
-
 #endregion 
+#region Deadlock match logger widgets
+match_list = QListWidget()
+add_match_button = QPushButton("Add Match")
+#endregion
 #region Sidebar Items
 home_item = QTreeWidgetItem(["Home"])
 #Games
@@ -72,6 +77,7 @@ display_item = QTreeWidgetItem(["Display"])
 sound_item = QTreeWidgetItem(["Sound"])
 # ? potential settings Im Considering Link accounts too add different Riot accounts for league or steam accounts for deadlock
 #endregion
+
 #region Labels
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
@@ -82,7 +88,10 @@ placeholder_label = QLabel("Main content area")
 main_layout = QHBoxLayout()
 content_layout = QVBoxLayout()
 sidebar_layout = QVBoxLayout()
+
+
 #endregion
+
 #region Configure Objects
 #Window
 window.setWindowTitle("Proxy's Nexus") #sets the title of the GUI
@@ -92,6 +101,10 @@ welcome_font = QFont()
 welcome_font.setPointSize(20)
 welcome_label.setFont(welcome_font) 
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
+
+#Hero Logger
+
+
 #endregion
 #region Pagemap
 page_map = {league_item: league_page, 
@@ -112,11 +125,9 @@ page_map = {league_item: league_page,
             maintenance_item: maintenance_page,
             car_wishlist_item: car_wishlist_page,
             games_item: games_page}
+
 #endregion
 #region Functions
-
-    
-
 
 def tree_clicked(item, column): 
     if item in page_map:
@@ -125,20 +136,95 @@ def tree_clicked(item, column):
         placeholder_label.setText(item.text(0))
         page_stack.setCurrentWidget(home_page)
 
-
+def open_match_dialog():
+    deadlock_add_match_dialog = QDialog()
+    deadlock_add_match_dialog_layout = QVBoxLayout()
+    deadlock_add_match_dialog_label = QLabel("Add Match")
+    deadlock_add_match_dialog.setWindowTitle("Add Match")
+    deadlock_add_match_dialog.resize(300, 200)
+    deadlock_add_match_dialog.setLayout(deadlock_add_match_dialog_layout)
+    deadlock_add_match_dialog_layout.addWidget(deadlock_add_match_dialog_label)
+    hero_names = ["Abrams", 
+              "Apollo", 
+              "Bebop", 
+              "Billy", 
+              "Calico", 
+              "Celeste",
+              "Doorman", 
+              "Drifter", 
+              "Dynamo", 
+              "Graves", 
+              "Grey Talon",
+              "Haze",
+              "Holliday",
+              "Infernus",
+              "Ivy",
+              "Kelvin",
+              "Lady Geist",
+              "Lash",
+              "McGinnis",
+              "Mina",
+              "Mirage",
+              "Mo & Krill",
+              "Paige",
+              "Paradox",
+              "Pocket",
+              "Rem", 
+              "Seven",
+              "Shiv",
+              "Silver",
+              "Sinclair",
+              "Venator",
+              "Victor",
+              "Vindicta",
+              "Viscous",
+              "Vyper",
+              "Warden",
+              "Wraith",
+              "Yamato"]
+    hero_dropdown = QComboBox()
+    hero_dropdown.setEditable(True)
+    hero_dropdown.addItems(hero_names)
+    hero_completer = QCompleter(hero_names)
+    hero_completer.setFilterMode(Qt.MatchStartsWith)
+    hero_dropdown.setCompleter(hero_completer)
+    hero_dropdown.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    hero_completer.setCaseSensitivity(Qt.CaseInsensitive)
+    deadlock_add_match_dialog_layout.addWidget(hero_dropdown)
+    kda_input = QLineEdit()
+    kda_input.setPlaceholderText("K/D/A, example: 8/5/12")
+    issue_dropdown = QComboBox()
+    issue_names = ["Positioning", "Aim", "Bad items", "Fed early", "Team fights", "Objectives", "Other"]
+    issue_dropdown.addItems(issue_names)
+    win_button = QPushButton("Win")
+    loss_button = QPushButton("Loss")
+    deadlock_add_match_dialog_layout.addWidget(kda_input)
+    deadlock_add_match_dialog_layout.addWidget(issue_dropdown)
+    deadlock_add_match_dialog_layout.addWidget(win_button)
+    deadlock_add_match_dialog_layout.addWidget(loss_button)
+    deadlock_add_match_dialog.exec()
+    pass
 #endregion
+
 #* Connect the Objects(building relationships
+
 #region Connect Widgets To Layouts
 window.setCentralWidget(central_widget)
 content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)  
+#add widgets to layouts
 
+deadlock_matches_layout.addWidget(add_match_button)
 #endregion
+
 #region Connect Signals
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
+add_match_button.clicked.connect(open_match_dialog) # Connects create match button to open_match_dialog function
 #endregion
+
 #*Build each section ex(add widgets)
+
 #region Build Content Pages
 content_layout_items = [welcome_label, page_stack]
 for item in content_layout_items:
@@ -165,13 +251,19 @@ page_stack_items = [home_page,
                     car_wishlist_page,
                     games_page]
 #endregion
+
 for item in page_stack_items:
     page_stack.addWidget(item)
+
+
 #endregion
+
 #region Build Sidebar Layout
 sidebar_layout.addWidget(sidebar_tree)
 #endregion
+
 #Connect the major sections
+
 #region Build Main Layout
 main_layout_items = [sidebar_widget, content_widget] #Adds side bar and content widget to main layout
 for item in main_layout_items:
@@ -180,6 +272,7 @@ for item in main_layout_items:
 main_layout.setStretch(0, 1.5)  # sidebar
 main_layout.setStretch(1, 3)  # content area
 #endregion
+
 #region Build Sidebar Tree
 sidebar_tree.setHeaderLabel("Proxy") #Sets Tree header name as Proxy(Placeholder)
 #Top Level Items
@@ -211,7 +304,6 @@ for item in garage_child_items:
 league_child_items = [league_matches_item, league_accounts_item]
 for item in league_child_items:
     league_item.addChild(item)
-
 #endregion
 
 #region End Program
