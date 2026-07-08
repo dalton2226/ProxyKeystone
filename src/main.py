@@ -20,8 +20,11 @@ def build_page(page_title): # Helper function the builds the page
 content_widget = QWidget()
 central_widget = QWidget() 
 sidebar_widget = QWidget()
-home_page = QWidget()
+sidebar_tree = QTreeWidget()
+page_stack = QStackedWidget()
+#keep above Widgets alone
 #Games
+home_page, home_layout = build_page("Home")
 games_page, games_layout = build_page("Game Library")
 league_page, league_layout = build_page("League Overview")
 league_matches_page, league_matches_layout = build_page("Match History")
@@ -30,20 +33,19 @@ deadlock_page, deadlock_layout = build_page("Deadlock Overview")
 deadlock_builds_page, deadlock_builds_layout = build_page("Builds")
 deadlock_matches_page, deadlock_matches_layout = build_page("Match History")
 #Finances
-finance_page = QWidget() 
-balance_page = QWidget() 
-bill_page = QWidget()
-purchases_page = QWidget() 
+finance_page,finance_layout = build_page("Finances")
+balance_page,balance_layout = build_page("Current Balance")
+bill_page,bill_layout = build_page("Bills")
+purchases_page,purchases_layout = build_page("Recent Purchases")
 #Garage
-garage_page = QWidget() 
-maintenance_page = QWidget() 
-car_wishlist_page = QWidget() 
+garage_page,garage_layout = build_page("Garage")
+maintenance_page, maintenance_layout = build_page("Maintenance")
+car_wishlist_page, car_wishlist_layout = build_page("Car Wishlist")
 #Settings
-settings_page = QWidget() 
-display_page = QWidget() 
-sound_page = QWidget() 
-sidebar_tree = QTreeWidget()
-page_stack = QStackedWidget()
+settings_page, settings_layout = build_page("Settings")
+display_page, display_layout = build_page("Display Settings")
+sound_page, sound_layout = build_page("Sound Settings")
+
 #endregion 
 #region Sidebar Items
 home_item = QTreeWidgetItem(["Home"])
@@ -73,41 +75,13 @@ sound_item = QTreeWidgetItem(["Sound"])
 #region Labels
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
-home_title_label = QLabel("Home")
 
-#Finances
-finance_title_label = QLabel("Finances") 
-balance_title_label = QLabel("Current Balance") 
-bill_title_label = QLabel("Bills") 
-purchases_title_label = QLabel("Recent Purchases") 
-#Garage
-garage_title_label = QLabel("Garage") 
-maintenance_title_label = QLabel("Maintenance") 
-car_wishlist_title_label = QLabel("Car Wishlist") 
-#Settings
-settings_title_label = QLabel("Settings") 
-display_title_label = QLabel("Display Settings") 
-sound_title_label = QLabel("Sound Settings") 
 #endregion
 
 #region Create Layouts
 main_layout = QHBoxLayout()
 content_layout = QVBoxLayout()
 sidebar_layout = QVBoxLayout()
-home_layout = QVBoxLayout() 
-#Finances
-finance_layout = QVBoxLayout()
-balance_layout = QVBoxLayout()
-bill_layout = QVBoxLayout()
-purchases_layout = QVBoxLayout()
-#Garage
-garage_layout = QVBoxLayout() 
-maintenance_layout = QVBoxLayout() 
-car_wishlist_layout = QVBoxLayout() 
-#Settings
-settings_layout = QVBoxLayout()
-display_layout = QVBoxLayout()
-sound_layout = QVBoxLayout()
 #endregion
 #region Configure Objects
 #Window
@@ -160,21 +134,6 @@ content_widget.setLayout(content_layout)
 sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)  
 
-home_page.setLayout(home_layout)
-
-#Finances
-finance_page.setLayout(finance_layout) 
-balance_page.setLayout(balance_layout) 
-bill_page.setLayout(bill_layout) 
-purchases_page.setLayout(purchases_layout) 
-#Garage
-garage_page.setLayout(garage_layout)
-maintenance_page.setLayout(maintenance_layout) 
-car_wishlist_page.setLayout(car_wishlist_layout) 
-#Settings
-settings_page.setLayout(settings_layout) 
-display_page.setLayout(display_layout) 
-sound_page.setLayout(sound_layout)
 #endregion
 #region Connect Signals
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
@@ -184,21 +143,7 @@ sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function 
 content_layout_items = [welcome_label, page_stack]
 for item in content_layout_items:
     content_layout.addWidget(item)
-home_layout.addWidget(home_title_label)
 
-#Finances
-finance_layout.addWidget(finance_title_label)
-balance_layout.addWidget(balance_title_label)
-bill_layout.addWidget(bill_title_label)
-purchases_layout.addWidget(purchases_title_label)
-#Garage
-car_wishlist_layout.addWidget(car_wishlist_title_label)
-garage_layout.addWidget(garage_title_label) 
-maintenance_layout.addWidget(maintenance_title_label) 
-#Settings
-settings_layout.addWidget(settings_title_label)
-display_layout.addWidget(display_title_label)
-sound_layout.addWidget(sound_title_label)
 home_layout.addWidget(placeholder_label)
 #region page stack items
 page_stack_items = [home_page, 
