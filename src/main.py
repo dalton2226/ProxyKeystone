@@ -8,7 +8,7 @@ window = QMainWindow() # Creates Main window
 #endregion
 
 #region Helper Functions
-def build_page(page_title): # Helper function the builds the page 
+def build_page(page_title): # Helper function that helps builds the pages
     page = QWidget()
     layout = QVBoxLayout()
     title_label = QLabel(page_title)
@@ -17,7 +17,7 @@ def build_page(page_title): # Helper function the builds the page
     return (page, layout)
 #endregion
 
-#*Create Objects
+#* Create UI Objects
 
 #region Create Pages
 content_widget = QWidget()
@@ -81,6 +81,8 @@ sound_item = QTreeWidgetItem(["Sound"])
 #region Labels
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
+deadlock_rank_label = QLabel("Current Rank")
+deadlock_average_rank_label = QLabel("Average Rank In Recent Games")
 
 #endregion
 
@@ -102,11 +104,9 @@ welcome_font.setPointSize(20)
 welcome_label.setFont(welcome_font) 
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
 
-#Hero Logger
-
-
 #endregion
 #region Pagemap
+
 page_map = {league_item: league_page, 
             deadlock_item: deadlock_page, 
             home_item: home_page, 
@@ -141,7 +141,7 @@ def open_match_dialog():
     deadlock_add_match_dialog_layout = QVBoxLayout()
     deadlock_add_match_dialog_label = QLabel("Add Match")
     deadlock_add_match_dialog.setWindowTitle("Add Match")
-    deadlock_add_match_dialog.resize(300, 200)
+    deadlock_add_match_dialog.setMinimumSize(300, 250)
     deadlock_add_match_dialog.setLayout(deadlock_add_match_dialog_layout)
     deadlock_add_match_dialog_layout.addWidget(deadlock_add_match_dialog_label)
     hero_names = ["Abrams", 
@@ -202,8 +202,30 @@ def open_match_dialog():
     deadlock_add_match_dialog_layout.addWidget(issue_dropdown)
     deadlock_add_match_dialog_layout.addWidget(win_button)
     deadlock_add_match_dialog_layout.addWidget(loss_button)
+    def save_win_match():
+        hero = hero_dropdown.currentText()
+        kda = kda_input.text()
+        issue = issue_dropdown.currentText()
+        result = "Win"
+        win_match_results = f"Match Results:{result} Character-{hero} KDA-{kda} Main Issue-{issue}"
+        match_list.addItem(win_match_results)
+        deadlock_add_match_dialog.accept()
+
+    def save_loss_match():
+        hero = hero_dropdown.currentText()
+        kda = kda_input.text()
+        issue = issue_dropdown.currentText()
+        result = "Loss"
+        loss_match_results = f"Match Results:{result} Character-{hero} KDA-{kda} Main Issue-{issue}"
+        match_list.addItem(loss_match_results)
+        deadlock_add_match_dialog.accept()
+
+    win_button.clicked.connect(save_win_match)
+    loss_button.clicked.connect(save_loss_match)
+
     deadlock_add_match_dialog.exec()
-    pass
+    #Save Match Dialog
+
 #endregion
 
 #* Connect the Objects(building relationships
@@ -231,7 +253,7 @@ for item in content_layout_items:
     content_layout.addWidget(item)
 
 home_layout.addWidget(placeholder_label)
-#region page stack items
+
 page_stack_items = [home_page, 
                     league_page, 
                     deadlock_page, 
@@ -250,11 +272,15 @@ page_stack_items = [home_page,
                     maintenance_page, 
                     car_wishlist_page,
                     games_page]
-#endregion
 
 for item in page_stack_items:
     page_stack.addWidget(item)
 
+# Add Deadlock labels
+deadlock_layout.addWidget(deadlock_average_rank_label)
+deadlock_layout.addWidget(deadlock_rank_label)
+deadlock_matches_layout.addWidget(add_match_button)
+deadlock_matches_layout.addWidget(match_list)
 
 #endregion
 
