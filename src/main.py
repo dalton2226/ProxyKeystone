@@ -26,6 +26,12 @@ try:
         deadlock_matches = json.load(file)
 except FileNotFoundError:
     deadlock_matches = []
+
+try:
+    with open("recurring_expenses.json", "r") as file:
+        recurring_expenses = json.load(file)
+except FileNotFoundError:
+    recurring_expenses = []
     
 #endregion
 #region Create Pages
@@ -46,7 +52,7 @@ deadlock_matches_page, deadlock_matches_layout = build_page("Match History")
 #Finances
 finance_page,finance_layout = build_page("Finances")
 balance_page,balance_layout = build_page("Current Balance")
-bill_page,bill_layout = build_page("Bills")
+expense_page,expense_layout = build_page("Bills")
 purchases_page,purchases_layout = build_page("Recent Purchases")
 #Garage
 garage_page,garage_layout = build_page("Garage")
@@ -60,6 +66,7 @@ sound_page, sound_layout = build_page("Sound Settings")
 #region Deadlock match logger widgets
 match_list = QListWidget()
 add_match_button = QPushButton("Add Match")
+add_expense_button = QPushButton("Add New Expense")
 #endregion
 #region Sidebar Items
 home_item = QTreeWidgetItem(["Home"])
@@ -127,7 +134,7 @@ page_map = {league_item: league_page,
             deadlock_matches_item: deadlock_matches_page, 
             finance_item: finance_page, 
             balance_item: balance_page, 
-            bills_item: bill_page,
+            bills_item: expense_page,
             purchases_item: purchases_page, 
             settings_item: settings_page, 
             display_item: display_page, 
@@ -316,6 +323,42 @@ if deadlock_matches:
     deadlock_rank_label.setText(f"Current Rank: {rank} Division {division}")
 #endregion
 
+#region dialog for adding expenses
+def open_expenses_dialog():
+    add_expenses_dialog = QDialog()
+    add_expenses_dialog_layout = QVBoxLayout()
+    add_expenses_dialog_label = QLabel("Add Expense")
+    add_expenses_dialog.setMinimumSize(300, 250)
+    add_expenses_dialog.setLayout(add_expenses_dialog_layout)
+    add_expenses_dialog_layout.addWidget(add_expenses_dialog_label)
+    input_expenses_name = QLineEdit()
+    expense_name_label = QLabel("Input Name of Expense")
+    add_expenses_dialog_layout.addWidget(expense_name_label)
+    input_expenses_name.setPlaceholderText("Example: Car Insurance")
+    add_expenses_dialog_layout.addWidget(input_expenses_name)
+    input_expenses_amount = QLineEdit()
+    expense_amount_label = QLabel("Input Amount of Expense")
+    add_expenses_dialog_layout.addWidget(expense_amount_label)
+    add_expenses_dialog_layout.addWidget(input_expenses_amount)
+    input_expenses_amount.setPlaceholderText("Example: 15.99")
+    input_expenses_due_date = QLineEdit()
+    expense_due_date_label = QLabel("Input Day Expense is Due")
+    add_expenses_dialog_layout.addWidget(expense_due_date_label)
+    input_expenses_due_date.setPlaceholderText("Example: 22")
+    add_expenses_dialog_layout.addWidget(input_expenses_due_date)
+    input_expenses_category_dropdown = QComboBox()
+    expense_category_label = QLabel("Choose Category of Expense")
+    add_expenses_dialog_layout.addWidget(expense_category_label)
+    add_expenses_dialog_layout.addWidget(input_expenses_category_dropdown)
+    expense_categories = ["Insurance",
+                          "Phone",
+                          "Rent",
+                          "Subscription Service",
+                          "Other"]
+    input_expenses_category_dropdown.addItems(expense_categories)
+    add_expenses_dialog.exec()
+
+#endregion
 #* Connect the Objects(building relationships
 
 #region Connect Widgets To Layouts
@@ -329,6 +372,7 @@ central_widget.setLayout(main_layout)
 #region Connect Signals
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
 add_match_button.clicked.connect(open_match_dialog) # Connects create match button to open_match_dialog function
+add_expense_button.clicked.connect(open_expenses_dialog)
 #endregion
 
 #*Build each section ex(add widgets)
@@ -349,7 +393,7 @@ page_stack_items = [home_page,
                     deadlock_matches_page, 
                     finance_page, 
                     balance_page, 
-                    bill_page, 
+                    expense_page, 
                     purchases_page, 
                     settings_page, 
                     display_page, 
@@ -365,6 +409,7 @@ for item in page_stack_items:
 # Add Deadlock labels
 deadlock_layout.addWidget(deadlock_rank_label)
 deadlock_matches_layout.addWidget(add_match_button)
+expense_layout.addWidget(add_expense_button)
 deadlock_matches_layout.addWidget(match_list)
 
 #endregion
