@@ -1,8 +1,9 @@
 #region Imports and Create window
 import sys, json
-from PySide6.QtWidgets import QApplication, QCompleter, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QStackedWidget, QLineEdit, QComboBox, QPushButton, QListWidget, QDialog
-from PySide6.QtCore import Qt 
+from PySide6.QtWidgets import QApplication, QCompleter, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QStackedWidget, QLineEdit, QComboBox, QPushButton, QListWidget, QDialog, QGraphicsPixmapItem
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
+from PySide6.QtGui import QPixmap
 app = QApplication(sys.argv)
 window = QMainWindow() # Creates Main window
 #endregion
@@ -18,13 +19,14 @@ def build_page(page_title): # Helper function that helps builds the pages
 #endregion
 
 #* Create UI Objects
+
 #region Deadlock Matches List
-deadlock_matches = []
 try:
     with open("deadlock_matches.json", "r") as file:
         deadlock_matches = json.load(file)
 except FileNotFoundError:
     deadlock_matches = []
+    
 #endregion
 #region Create Pages
 content_widget = QWidget()
@@ -88,7 +90,6 @@ sound_item = QTreeWidgetItem(["Sound"])
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
 deadlock_rank_label = QLabel("Current Rank")
-deadlock_average_rank_label = QLabel("Average Rank In Recent Games")
 
 #endregion
 #region Create Layouts
@@ -110,10 +111,11 @@ welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement 
 
 #endregion
 
-#Load Json Files
+#region Load Json Files
 for match in deadlock_matches:
     match_results = f"Match Results: {match['result']} • Rank: {match['rank']} {match['division']} • Character: {match['hero']} • KDA: {match['kda']} • Main Issue: {match['issue']}"
     match_list.addItem(match_results)
+#endregion
 #region Pagemap
 
 page_map = {league_item: league_page, 
@@ -270,12 +272,14 @@ def open_match_dialog():
         "issue": issue,
         "rank": rank,
         "division": division}
+        current_rank = f"{rank} Division {division}"
+        deadlock_rank_label.setText(f"Current Rank: {current_rank}")
         win_match_results = f"Match Results: {result} • Rank: {rank} {division} • Character- {hero} • KDA- {kda} • Main Issue- {issue}"
         match_list.addItem(win_match_results)
-        deadlock_add_match_dialog.accept()
         deadlock_matches.append(deadlock_match)
         with open("deadlock_matches.json", "w") as file:
             json.dump(deadlock_matches, file, indent=4)
+        deadlock_add_match_dialog.accept()
 
     def save_loss_match():
         hero = hero_dropdown.currentText()
@@ -291,19 +295,25 @@ def open_match_dialog():
         "issue": issue,
         "rank": rank,
         "division": division}
+        current_rank = f"{rank} Division {division}"
+        deadlock_rank_label.setText(f"Current Rank: {current_rank}")
         loss_match_results = f"Match Results: {result} • Rank: {rank} {division} • Character- {hero} • KDA- {kda} • Main Issue- {issue}"
         match_list.addItem(loss_match_results) 
-        deadlock_add_match_dialog.accept()
         deadlock_matches.append(deadlock_match)
         with open("deadlock_matches.json", "w") as file:
             json.dump(deadlock_matches, file, indent=4)
+        deadlock_add_match_dialog.accept()
 
     win_button.clicked.connect(save_win_match)
     loss_button.clicked.connect(save_loss_match)
 
     deadlock_add_match_dialog.exec()
     #Save Match Dialog
-
+if deadlock_matches:
+    latest_match = deadlock_matches[-1]
+    rank = latest_match["rank"]
+    division = latest_match["division"]
+    deadlock_rank_label.setText(f"Current Rank: {rank} Division {division}")
 #endregion
 
 #* Connect the Objects(building relationships
@@ -315,7 +325,6 @@ sidebar_widget.setLayout(sidebar_layout)
 central_widget.setLayout(main_layout)  
 #add widgets to layouts
 
-deadlock_matches_layout.addWidget(add_match_button)
 #endregion
 #region Connect Signals
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
@@ -354,7 +363,6 @@ for item in page_stack_items:
     page_stack.addWidget(item)
 
 # Add Deadlock labels
-deadlock_layout.addWidget(deadlock_average_rank_label)
 deadlock_layout.addWidget(deadlock_rank_label)
 deadlock_matches_layout.addWidget(add_match_button)
 deadlock_matches_layout.addWidget(match_list)
