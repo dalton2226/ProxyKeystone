@@ -1,5 +1,5 @@
 #region Imports and Create window
-import sys
+import sys, json
 from PySide6.QtWidgets import QApplication, QCompleter, QLabel, QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QStackedWidget, QLineEdit, QComboBox, QPushButton, QListWidget, QDialog
 from PySide6.QtCore import Qt 
 from PySide6.QtGui import QFont
@@ -18,7 +18,14 @@ def build_page(page_title): # Helper function that helps builds the pages
 #endregion
 
 #* Create UI Objects
-
+#region Deadlock Matches List
+deadlock_matches = []
+try:
+    with open("deadlock_matches.json", "r") as file:
+        deadlock_matches = json.load(file)
+except FileNotFoundError:
+    deadlock_matches = []
+#endregion
 #region Create Pages
 content_widget = QWidget()
 central_widget = QWidget() 
@@ -77,7 +84,6 @@ display_item = QTreeWidgetItem(["Display"])
 sound_item = QTreeWidgetItem(["Sound"])
 # ? potential settings Im Considering Link accounts too add different Riot accounts for league or steam accounts for deadlock
 #endregion
-
 #region Labels
 welcome_label = QLabel("Proxy's Nexus")
 placeholder_label = QLabel("Main content area")
@@ -85,7 +91,6 @@ deadlock_rank_label = QLabel("Current Rank")
 deadlock_average_rank_label = QLabel("Average Rank In Recent Games")
 
 #endregion
-
 #region Create Layouts
 main_layout = QHBoxLayout()
 content_layout = QVBoxLayout()
@@ -93,7 +98,6 @@ sidebar_layout = QVBoxLayout()
 
 
 #endregion
-
 #region Configure Objects
 #Window
 window.setWindowTitle("Proxy's Nexus") #sets the title of the GUI
@@ -105,6 +109,11 @@ welcome_label.setFont(welcome_font)
 welcome_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter) #Determines Placement of Welcome Label
 
 #endregion
+
+#Load Json Files
+for match in deadlock_matches:
+    match_results = f"Match Results: {match['result']} • Rank: {match['rank']} {match['division']} • Character: {match['hero']} • KDA: {match['kda']} • Main Issue: {match['issue']}"
+    match_list.addItem(match_results)
 #region Pagemap
 
 page_map = {league_item: league_page, 
@@ -182,7 +191,31 @@ def open_match_dialog():
               "Warden",
               "Wraith",
               "Yamato"]
+    rank_names = ["Initiate",
+                  "Seeker",
+                  "Alchemist",
+                  "Arcanist",
+                  "Ritualist",
+                  "Emissary",
+                  "Archon",
+                  "Oracle",
+                  "Phantom",
+                  "Ascendant",
+                  "Eternus"]
+    division_names = ["I",
+                      "II",
+                      "III",
+                      "IV",
+                      "V",
+                      "*"]
     hero_dropdown = QComboBox()
+    rank_dropdown = QComboBox()
+    division_dropdown = QComboBox()
+    deadlock_dialog_hero_label = QLabel("Character")
+    deadlock_dialog_rank_label = QLabel("Average Rank of Game")
+    deadlock_dialog_division_label = QLabel("Division")
+    deadlock_dialog_issue_label = QLabel("Biggest Issue Had During Game")
+    deadlock_dialog_kda_label = QLabel("KDA")
     hero_dropdown.setEditable(True)
     hero_dropdown.addItems(hero_names)
     hero_completer = QCompleter(hero_names)
@@ -190,7 +223,20 @@ def open_match_dialog():
     hero_dropdown.setCompleter(hero_completer)
     hero_dropdown.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
     hero_completer.setCaseSensitivity(Qt.CaseInsensitive)
-    deadlock_add_match_dialog_layout.addWidget(hero_dropdown)
+    division_dropdown.setEditable(True)
+    division_dropdown.addItems(division_names)
+    division_completer = QCompleter(division_names)
+    division_completer.setFilterMode(Qt.MatchStartsWith)
+    division_dropdown.setCompleter(division_completer)
+    division_dropdown.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    division_completer.setCaseSensitivity(Qt.CaseInsensitive)
+    rank_dropdown.setEditable(True)
+    rank_dropdown.addItems(rank_names)
+    rank_completer = QCompleter(rank_names)
+    rank_completer.setFilterMode(Qt.MatchStartsWith)
+    rank_dropdown.setCompleter(rank_completer)
+    rank_dropdown.setInsertPolicy(QComboBox.InsertPolicy.NoInsert)
+    rank_completer.setCaseSensitivity(Qt.CaseInsensitive)
     kda_input = QLineEdit()
     kda_input.setPlaceholderText("K/D/A, example: 8/5/12")
     issue_dropdown = QComboBox()
@@ -198,7 +244,15 @@ def open_match_dialog():
     issue_dropdown.addItems(issue_names)
     win_button = QPushButton("Win")
     loss_button = QPushButton("Loss")
+    deadlock_add_match_dialog_layout.addWidget(deadlock_dialog_hero_label)
+    deadlock_add_match_dialog_layout.addWidget(hero_dropdown)
+    deadlock_add_match_dialog_layout.addWidget(deadlock_dialog_rank_label)
+    deadlock_add_match_dialog_layout.addWidget(rank_dropdown)
+    deadlock_add_match_dialog_layout.addWidget(deadlock_dialog_division_label)
+    deadlock_add_match_dialog_layout.addWidget(division_dropdown)
+    deadlock_add_match_dialog_layout.addWidget(deadlock_dialog_kda_label)
     deadlock_add_match_dialog_layout.addWidget(kda_input)
+    deadlock_add_match_dialog_layout.addWidget(deadlock_dialog_issue_label)
     deadlock_add_match_dialog_layout.addWidget(issue_dropdown)
     deadlock_add_match_dialog_layout.addWidget(win_button)
     deadlock_add_match_dialog_layout.addWidget(loss_button)
@@ -207,18 +261,42 @@ def open_match_dialog():
         kda = kda_input.text()
         issue = issue_dropdown.currentText()
         result = "Win"
-        win_match_results = f"Match Results:{result} Character-{hero} KDA-{kda} Main Issue-{issue}"
+        rank = rank_dropdown.currentText()
+        division = division_dropdown.currentText()
+        deadlock_match = {
+        "hero": hero,
+        "result": result,
+        "kda": kda,
+        "issue": issue,
+        "rank": rank,
+        "division": division}
+        win_match_results = f"Match Results: {result} • Rank: {rank} {division} • Character- {hero} • KDA- {kda} • Main Issue- {issue}"
         match_list.addItem(win_match_results)
         deadlock_add_match_dialog.accept()
+        deadlock_matches.append(deadlock_match)
+        with open("deadlock_matches.json", "w") as file:
+            json.dump(deadlock_matches, file, indent=4)
 
     def save_loss_match():
         hero = hero_dropdown.currentText()
         kda = kda_input.text()
         issue = issue_dropdown.currentText()
         result = "Loss"
-        loss_match_results = f"Match Results:{result} Character-{hero} KDA-{kda} Main Issue-{issue}"
-        match_list.addItem(loss_match_results)
+        rank = rank_dropdown.currentText()
+        division = division_dropdown.currentText()
+        deadlock_match = {
+        "hero": hero,
+        "result": result,
+        "kda": kda,
+        "issue": issue,
+        "rank": rank,
+        "division": division}
+        loss_match_results = f"Match Results: {result} • Rank: {rank} {division} • Character- {hero} • KDA- {kda} • Main Issue- {issue}"
+        match_list.addItem(loss_match_results) 
         deadlock_add_match_dialog.accept()
+        deadlock_matches.append(deadlock_match)
+        with open("deadlock_matches.json", "w") as file:
+            json.dump(deadlock_matches, file, indent=4)
 
     win_button.clicked.connect(save_win_match)
     loss_button.clicked.connect(save_loss_match)
@@ -239,7 +317,6 @@ central_widget.setLayout(main_layout)
 
 deadlock_matches_layout.addWidget(add_match_button)
 #endregion
-
 #region Connect Signals
 sidebar_tree.itemClicked.connect(tree_clicked) # Connects tree_clicked function to sidebar
 add_match_button.clicked.connect(open_match_dialog) # Connects create match button to open_match_dialog function
@@ -283,7 +360,6 @@ deadlock_matches_layout.addWidget(add_match_button)
 deadlock_matches_layout.addWidget(match_list)
 
 #endregion
-
 #region Build Sidebar Layout
 sidebar_layout.addWidget(sidebar_tree)
 #endregion
@@ -298,7 +374,6 @@ for item in main_layout_items:
 main_layout.setStretch(0, 1.5)  # sidebar
 main_layout.setStretch(1, 3)  # content area
 #endregion
-
 #region Build Sidebar Tree
 sidebar_tree.setHeaderLabel("Proxy") #Sets Tree header name as Proxy(Placeholder)
 #Top Level Items
@@ -331,6 +406,10 @@ league_child_items = [league_matches_item, league_accounts_item]
 for item in league_child_items:
     league_item.addChild(item)
 #endregion
+
+
+
+
 
 #region End Program
 window.show() # Makes window visible
